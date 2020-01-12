@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edugroup.models.JeuxVideo;
+import com.edugroup.models.projection.VideoGamesAllData;
 import com.edugroup.repositories.JeuxVideoRepository;
 
 @RestController
@@ -33,8 +34,10 @@ public class JeuxVideoController {
 	
 	
 	@GetMapping
-	public Page<JeuxVideo> afficheList(@PageableDefault Pageable page){
-		return jeuxRepo.findAll(page);
+	public Page<VideoGamesAllData> afficheList(@PageableDefault Pageable page){
+		return jeuxRepo.findAll(page)
+					   .map(game -> projectionFactory
+							   .createNullableProjection(VideoGamesAllData.class, game));
 	}
 	
 	@GetMapping(value = "/{id:[0-9]+}")
